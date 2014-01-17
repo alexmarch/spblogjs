@@ -2,4 +2,4 @@ spblogjs
 ========
 ![alt text][logo]
 
-[logo]: https://github.com/alexmarch/spblogjs/blob/master/public/img/logo.png
+[logo]: https://raw.github.com/alexmarch/spblogjs/master/public/img/logo.png
