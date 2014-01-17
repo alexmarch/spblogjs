@@ -1,7 +1,7 @@
 var mongoose = require('mongoose'),
     crypto = require('crypto');
 
-mongoose.connect('mongodb://***:****@ds061258.mongolab.com:61258/spblogjs');
+mongoose.connect('mongodb://***:***@ds061258.mongolab.com:61258/spblogjs');
 
 mongoose.connection.on('error', function (err) {
     console.error('Mongoose connection error %s', err);
