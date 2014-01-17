@@ -1,3 +1,45 @@
+var mongoose = require('mongoose'),
+    crypto = require('crypto');
+
+mongoose.connect('mongodb://spblogjs:wefew522ssrSf@ds061258.mongolab.com:61258/spblogjs');
+
+mongoose.connection.on('error', function (err) {
+    console.error('Mongoose connection error %s', err);
+});
+
+var len = 128;
+
+var iterations = 12000;
+
+function pass(passwd, salt, cb) {
+
+    if (arguments.length != 3) {
+        cb = salt;
+        crypto.randomBytes(len, function (err, salt) {
+            if (err) return cb(err);
+            salt = salt.toString('base64');
+            crypto.pbkdf2(passwd, salt, iterations, len, function (err, pwdHash) {
+                if (err) return cb(err);
+                cb(null, salt, pwdHash.toString('base64'));
+            });
+        });
+    } else {
+        crypto.pbkdf2(passwd, salt, iterations, len, function (err, pwdHash) {
+            if (err) return cb(err);
+            cb(null, salt, pwdHash.toString('base64'));
+        });
+    }
+
+
+};
+
+var UserSchema = mongoose.Schema({
+    email: String,
+    password: String
+}, {collectin: 'users'});
+
+var UserModel = mongoose.model('User', UserSchema);
+
 var router = {
 
     base: '/',
@@ -37,15 +79,21 @@ var router = {
             password = req.body.password;
 
         if (email && password) {
-            if (email == "mas_bk@mail.ru" && password == "demo") {
-                delete req.session.err;
-                res.render('blog');
-            } else {
-                req.session.err = {"email": email};
-                res.redirect('auth#error/email');
-            }
+            pass(password, "dasdas34234sfsQWWASfafa341", function (err, salt, hash) {
+                if (!err && hash) {
+                    UserModel.findOne({email: email, password: hash}, function (err, user) {
+                        if (err || user == null) {
+                            res.redirect('auth#error');
+                        } else {
+                            req.session.regenerate(function () {
+                                req.session.user = user;
+                                res.redirect('blogs');
+                            });
+                        }
+                    });
+                }
+            });
         } else {
-            delete req.session.err;
             res.redirect('auth#error');
         }
 
