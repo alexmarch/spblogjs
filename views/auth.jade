@@ -1,0 +1,18 @@
+extends layout
+block content
+    .container.sp-container
+
+        form.form-horizontal.signin-form(method='post',action='/signin', id='signin-form')
+            img.logo(src="../img/logo.png")
+            fieldset
+                legend Sign In
+            .control-group(id="email-group")
+                    input.input-xlarge.double-height(type='text', id='email', name="email", value="#{email ? email : ''}" placeholder='Enter email')
+            .control-group(id="password-group")
+                    input.input-xlarge.double-height(type='password', id='password', name="password", placeholder='Enter password')
+            .control-group
+                    button.btn.btn-large.btn-success(type='submit') Sign In
+                    button.btn.btn-large.btn-link(type='submit') Sign Up
+            #alert.alert.alert-error
+                #alert-close.close(data-dismiss='alert') &times
+                #msg
