@@ -1,4 +1,4 @@
-spblogjs
+SpBlogjs
 ========
 ![alt text][logo]
 
